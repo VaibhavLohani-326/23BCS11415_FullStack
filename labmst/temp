@@ -1,0 +1,115 @@
+import React, { useState } from "react";
+
+// Student Card Component
+function StudentCard({ name, roll, course }) {
+  return (
+    <div className="border-2 border-green-400 p-4 rounded bg-green-100">
+      <h3 className="font-bold text-lg text-green-700">{name}</h3>
+      <p>Roll: {roll}</p>
+      <p>Course: {course}</p>
+    </div>
+  );
+}
+
+function App() {
+  // Todo state
+  const [tasks, setTasks] = useState([]);
+  const [taskInput, setTaskInput] = useState("");
+
+  // Add task
+  const addTask = () => {
+    if (taskInput.trim() !== "") {
+      setTasks([...tasks, { id: Date.now(), text: taskInput, done: false }]);
+      setTaskInput("");
+    }
+  };
+
+  // Toggle done
+  const toggleTask = (id) => {
+    setTasks(
+      tasks.map((t) =>
+        t.id === id ? { ...t, done: !t.done } : t
+      )
+    );
+  };
+
+  // Delete task
+  const removeTask = (id) => {
+    setTasks(tasks.filter((t) => t.id !== id));
+  };
+
+  // Student data
+  const students = [
+    { id: 1, name: "John", roll: "101", course: "CS" },
+    { id: 2, name: "Sara", roll: "102", course: "IT" },
+    { id: 3, name: "Mike", roll: "103", course: "ME" },
+    { id: 4, name: "Lisa", roll: "104", course: "EC" },
+  ];
+
+  return (
+    <div className="p-6 bg-blue-50 min-h-screen">
+      {/* Todo Section */}
+      <div className="mb-8 p-4 bg-blue-100 rounded shadow">
+        <h2 className="text-2xl font-bold mb-4 text-blue-800">Todo App</h2>
+        <div className="flex mb-4">
+          <input
+            value={taskInput}
+            onChange={(e) => setTaskInput(e.target.value)}
+            placeholder="Write a task..."
+            className="flex-1 p-2 border border-blue-400 mr-2 rounded"
+          />
+          <button
+            onClick={addTask}
+            className="bg-blue-600 text-white px-4 py-2 rounded"
+          >
+            Add
+          </button>
+        </div>
+        <div>
+          {tasks.length === 0 && <p className="text-gray-500">No tasks yet!</p>}
+          {tasks.map((t) => (
+            <div
+              key={t.id}
+              className="flex items-center mb-2 p-2 bg-blue-50 rounded"
+            >
+              <input
+                type="checkbox"
+                checked={t.done}
+                onChange={() => toggleTask(t.id)}
+                className="mr-2"
+              />
+              <span
+                className={`flex-1 ${t.done ? "line-through text-gray-500" : ""}`}
+              >
+                {t.text}
+              </span>
+              <button
+                onClick={() => removeTask(t.id)}
+                className="ml-2 text-red-500"
+              >
+                Delete
+              </button>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Student Section */}
+      <div className="p-4 bg-green-50 rounded shadow">
+        <h2 className="text-2xl font-bold mb-4 text-green-800">Students</h2>
+        <div className="grid grid-cols-2 gap-4">
+          {students.map((s) => (
+            <StudentCard
+              key={s.id}
+              name={s.name}
+              roll={s.roll}
+              course={s.course}
+            />
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+export default App;
